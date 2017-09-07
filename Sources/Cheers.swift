@@ -3,7 +3,7 @@ import UIKit
 /// The view to show particles
 open class CheerView: UIView {
   public var config = Config()
-  var emitter: CAEmitterLayer?
+  open var emitter: CAEmitterLayer?
 
   open override func didMoveToSuperview() {
     super.didMoveToSuperview()
@@ -56,6 +56,14 @@ open class CheerView: UIView {
     layer.addSublayer(emitter)
     self.emitter = emitter
   }
+    
+    public func shuffleCells(_ cells: [CAEmitterCell]) -> [CAEmitterCell] {
+        return cells.shuffled()
+    }
+    
+    public func shuffleColors(_ cells: [UIColor]) -> [UIColor] {
+        return cells.shuffled()
+    }
 
   /// Stop animation
   open func stop() {
