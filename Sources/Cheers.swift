@@ -11,27 +11,20 @@ open class CheerView: UIView {
         isUserInteractionEnabled = false
     }
     
-    open func start(configurations: [Config]) {
-        stop()
-        
-        let emitter = CAEmitterLayer()
-        emitter.emitterPosition = CGPoint(x: bounds.width / 2.0, y: 0)
-        emitter.emitterShape = kCAEmitterLayerLine
-        emitter.emitterSize = CGSize(width: bounds.width, height: 1)
-        emitter.renderMode = kCAEmitterLayerBackToFront
-        
-        for config in configurations {
-            let colors = config.colors.shuffled()
-            var cells = [CAEmitterCell]()
+    
+    public class func animateInView(_ view: UIView, coinIcon: UIImage, billIcon: UIImage) -> Void {
+        let cheerView = CheerView(frame: view.bounds)
+        view.addSubview(cheerView)
+        cheerView.start(coinIcon: coinIcon, billIcon: billIcon)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            cheerView.stop()
         }
-        
-        
-        
-        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            cheerView.removeFromSuperview()
+        }
     }
     
-    /// Start animation
-    open func start() {
+    open func start(coinIcon: UIImage, billIcon: UIImage) {
         stop()
         
         let emitter = CAEmitterLayer()
@@ -43,7 +36,7 @@ open class CheerView: UIView {
         let colors = config.colors.shuffled()
         var cells = [CAEmitterCell]()
         
-        zip(pickImages(type: .image([UIImage(named: "bill")!])), colors.shuffled()).forEach { image, color in
+        zip(pickImages(type: .image([billIcon])), colors.shuffled()).forEach { image, color in
             let cell = CAEmitterCell()
             cell.birthRate = 15
             cell.lifetime = 20.0
@@ -63,7 +56,7 @@ open class CheerView: UIView {
             cells.append(cell)
         }
         
-        zip(pickImages(type: .image([UIImage(named: "coin")!])), colors.shuffled()).forEach { image, color in
+        zip(pickImages(type: .image([coinIcon])), colors.shuffled()).forEach { image, color in
             let cell = CAEmitterCell()
             cell.birthRate = 15
             cell.lifetime = 20.0
@@ -112,7 +105,9 @@ open class CheerView: UIView {
         
         layer.addSublayer(emitter)
         self.emitter = emitter
+        
     }
+    
     
     /// Stop animation
     public func stop() {
