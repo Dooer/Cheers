@@ -24,7 +24,7 @@ open class CheerView: UIView {
     let colors = config.colors.shuffled()
     var cells = [CAEmitterCell]()
 
-    zip(pickImages(), colors.shuffled()).forEach { image, color in
+    zip(pickImages(type: self.config.particle), colors.shuffled()).forEach { image, color in
       let cell = CAEmitterCell()
       cell.birthRate = 20
       cell.lifetime = 20.0
@@ -56,32 +56,24 @@ open class CheerView: UIView {
     layer.addSublayer(emitter)
     self.emitter = emitter
   }
-    
-    public func shuffleCells(_ cells: [CAEmitterCell]) -> [CAEmitterCell] {
-        return cells.shuffled()
-    }
-    
-    public func shuffleColors(_ cells: [UIColor]) -> [UIColor] {
-        return cells.shuffled()
-    }
 
   /// Stop animation
   open func stop() {
     emitter?.birthRate = 0
   }
-
-  open func pickImages() -> [UIImage] {
-    let generator = ImageGenerator()
-
-    switch config.particle {
-    case .confetti:
-      return [generator.rectangle(), generator.circle(),
-              generator.triangle(), generator.curvedQuadrilateral()]
-        .flatMap({ $0 })
-    case .image(let images):
-      return images
-    case .text(let size, let strings):
-      return strings.flatMap({ generator.generate(size: size, string: $0) })
+    
+    func pickImages(type: Particle) -> [UIImage] {
+        let generator = ImageGenerator()
+        
+        switch type {
+        case .confetti:
+            return [generator.rectangle(),
+                    generator.triangle(), generator.curvedQuadrilateral()]
+                .flatMap({ $0 })
+        case .image(let images):
+            return images
+        case .text(let size, let strings):
+            return strings.flatMap({ generator.generate(size: size, string: $0) })
+        }
     }
-  }
 }
