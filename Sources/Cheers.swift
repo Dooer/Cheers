@@ -1,18 +1,18 @@
 import UIKit
 
 /// The view to show particles
-public class CheerView: UIView {
+open class CheerView: UIView {
   public var config = Config()
   var emitter: CAEmitterLayer?
 
-  public override func didMoveToSuperview() {
+  open override func didMoveToSuperview() {
     super.didMoveToSuperview()
 
     isUserInteractionEnabled = false
   }
 
   /// Start animation
-  public func start() {
+  open func start() {
     stop()
 
     let emitter = CAEmitterLayer()
@@ -58,11 +58,11 @@ public class CheerView: UIView {
   }
 
   /// Stop animation
-  public func stop() {
+  open func stop() {
     emitter?.birthRate = 0
   }
 
-  func pickImages() -> [UIImage] {
+  open func pickImages() -> [UIImage] {
     let generator = ImageGenerator()
 
     switch config.particle {
